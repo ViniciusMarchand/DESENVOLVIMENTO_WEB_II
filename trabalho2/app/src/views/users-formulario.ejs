@@ -1,0 +1,53 @@
+<%- include('includes/head') %>
+
+<body class="min-w-screen min-h-screen bg-[#F3F4F6] flex justify-center items-center flex-col pt-[90px]">
+    <%- include('includes/nav') %>
+    <div class="w-full min-h-full flex justify-center items-center">
+        <main class="bg-[#fdfdfd] border-lg shadow-lg p-4 w-[300px] min-h-[550px] rounded-md mb-[50px]">
+            <h1 class="text-center text-[20px] font-bold"> <%= data.title %> </h1>
+            
+            <form action="/users/add" method="post">
+                <div id="form-area">
+                    <label for="name">Nome: </label>
+                    <input class="border border-lightgray rounded-md block w-full p-1" type="text" name="name">
+                    <br>
+                    <label for="email">Email: </label>
+                    <input class="border border-lightgray rounded-md block w-full p-1" type="email" name="email">
+                    <br>
+                    <label for="password">Senha: </label>
+                    <input class="border border-lightgray rounded-md block w-full p-1" type="password" name="password">
+                    <br>
+                    <label for="cpf">CPF: </label>
+                    <input class="border border-lightgray rounded-md block w-full p-1" type="text" name="cpf">
+                    <br>
+                    <label for="phone">Cargo: </label>
+                    <select name="role" class="border border-lightgray rounded-md block w-full p-1">
+                        <option value="admin">Admin</option>
+                        <option value="user">User</option>
+                    </select>
+                    <br>
+                    <div class="flex flex-col">
+                        <label>Email:</label>
+                        <input type="email" name="email" class="border border-lightgray rounded-md block w-full p-1">
+                        <button onclick="addEmail()" type="button">+</button>
+                        <br>
+                    </div>
+                </div>
+        
+                <button type="submit">CADASTRAR</button>
+            </form>
+        </main>
+    </div>
+
+    <script>
+        function addEmail() {
+            const formArea = document.querySelector('#form-area');
+            const input = document.createElement('input');
+            input.type = 'email';
+            input.name = 'email';
+            input.className = "border border-lightgray rounded-md block w-full p-1"
+            document.querySelector('#form-area').appendChild(input);
+        }
+    </script>
+</body>
+</html>
