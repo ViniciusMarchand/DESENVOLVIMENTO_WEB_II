@@ -13,10 +13,6 @@ const db = new Database('dados.db', {
 });
 
 db.exec(`
-    DROP TABLE IF EXISTS users
-`);
-
-db.exec(`
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
@@ -28,11 +24,13 @@ db.exec(`
     )
 `);
 
+
 db.exec(`
     CREATE TABLE IF NOT EXISTS phones (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         number TEXT NOT NULL,
         user_id INTEGER,
+        created_at TEXT,
         FOREIGN KEY(user_id) REFERENCES users(id)
     )
 `);
@@ -42,6 +40,7 @@ db.exec(`
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         email TEXT NOT NULL,
         user_id INTEGER,
+        created_at TEXT,
         FOREIGN KEY(user_id) REFERENCES users(id)
     )
 `);

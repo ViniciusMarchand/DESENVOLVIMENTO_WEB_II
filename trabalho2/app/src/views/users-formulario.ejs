@@ -6,13 +6,10 @@
         <main class="bg-[#fdfdfd] border-lg shadow-lg p-4 w-[300px] min-h-[550px] rounded-md mb-[50px]">
             <h1 class="text-center text-[20px] font-bold"> <%= data.title %> </h1>
             
-            <form action="/users/add" method="post">
-                <div id="form-area">
+            <form action="/users/add" method="post" class="flex flex-col items-center pt-2">
+                <div>
                     <label for="name">Nome: </label>
                     <input class="border border-lightgray rounded-md block w-full p-1" type="text" name="name">
-                    <br>
-                    <label for="email">Email: </label>
-                    <input class="border border-lightgray rounded-md block w-full p-1" type="email" name="email">
                     <br>
                     <label for="password">Senha: </label>
                     <input class="border border-lightgray rounded-md block w-full p-1" type="password" name="password">
@@ -26,27 +23,42 @@
                         <option value="user">User</option>
                     </select>
                     <br>
-                    <div class="flex flex-col">
-                        <label>Email:</label>
+                    <div id="email-area" class="flex flex-col gap-y-3">
+                        <div class="flex w-full justify-between">
+                            <label class="">Email(s):</label>
+                            <button title="Adicionar mais um email" onclick="addEmail()" type="button" class="bg-[#2563EB] text-[#fdfdfd] w-[25px] h-[25px] rounded-md flex items-center justify-center pb-[3px]">+</button>
+                        </div>
                         <input type="email" name="email" class="border border-lightgray rounded-md block w-full p-1">
-                        <button onclick="addEmail()" type="button">+</button>
-                        <br>
+                    </div>
+                    <div id="tel-area" class="flex flex-col gap-y-3 mt-3">
+                        <div class="flex w-full justify-between">
+                            <label class="">Telefone(s):</label>
+                            <button title="Adicionar mais um telefone" onclick="addTelefone()" type="button" class="bg-[#2563EB] text-[#fdfdfd] w-[25px] h-[25px] rounded-md flex items-center justify-center pb-[3px]">+</button>
+                        </div>
+                        <input type="tel" name="phone" class="border border-lightgray rounded-md block w-full p-1">
                     </div>
                 </div>
-        
-                <button type="submit">CADASTRAR</button>
+                <button type="submit" class="bg-[#2563EB] text-[#fdfdfd] w-[190px] h-[30px] rounded-md flex items-center justify-center mt-5">CADASTRAR</button>
             </form>
         </main>
     </div>
 
     <script>
         function addEmail() {
-            const formArea = document.querySelector('#form-area');
+            const formArea = document.querySelector('#email-area');
             const input = document.createElement('input');
             input.type = 'email';
             input.name = 'email';
-            input.className = "border border-lightgray rounded-md block w-full p-1"
-            document.querySelector('#form-area').appendChild(input);
+            input.className = "border border-lightgray rounded-md block w-full p-1 mt-3"
+            document.querySelector('#email-area').appendChild(input);
+        }
+        function addTelefone() {
+            const formArea = document.querySelector('#tel-area');
+            const input = document.createElement('input');
+            input.type = 'tel';
+            input.name = 'phone';
+            input.className = "border border-lightgray rounded-md block w-full p-1 mt-3"
+            document.querySelector('#tel-area').appendChild(input);
         }
     </script>
 </body>

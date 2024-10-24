@@ -24,7 +24,6 @@
 
 
 import { db } from "../config/database.js";
-import { User } from "./user-model.js";
 
 class UserDao {
     list() {
@@ -38,7 +37,7 @@ class UserDao {
 
     save({ name, password, cpf, role, createdAt }) {
         const stmt = db.prepare('INSERT INTO users (name, password, cpf, role, created_at) VALUES (@name, @password, @cpf, @role, @createdAt)');
-        stmt.run({name, password, cpf, role, createdAt});
+        return stmt.run({name, password, cpf, role, createdAt});
     }
 }
 

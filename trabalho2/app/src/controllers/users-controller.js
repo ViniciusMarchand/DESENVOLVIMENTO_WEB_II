@@ -1,3 +1,5 @@
+import { EmailDao } from "../models/email-dao.js";
+import { PhoneDao } from "../models/phone-dao.js";
 import { UserDao } from "../models/user-dao.js";
 import { User } from "../models/user-model.js";
 
@@ -41,10 +43,47 @@ function addUser(req, res) {
         // })
 
         const dados = req.body;
+
         console.log(dados)
+
+        const emailDao = new EmailDao();
+        const phoneDao = new PhoneDao();
         try {
             const newUser = new User(dados.name, dados.password, dados.cpf, dados.role);
-            userDao.save(newUser);
+            const lastIdCreated = userDao.save(newUser).lastInsertRowid;
+
+            if (Array.isArray(dados.email)) {
+                dados.email.forEach(email => {
+                    emailDao.save({
+                        email,
+                        user_id: lastIdCreated,
+                        createdAt: new Date().toISOString()
+                    });
+                });
+            } else {
+                emailDao.save({
+                    email: dados.email,
+                    user_id: 1,
+                    createdAt: new Date().toISOString()
+                });
+            }
+
+            if (Array.isArray(dados.phone)) {
+                dados.phone.forEach(phone => {
+                    phoneDao.save({
+                        number:phone,
+                        user_id: lastIdCreated,
+                        createdAt: new Date().toISOString()
+                    });
+                });
+            } else {
+                phoneDao.save({
+                    number: dados.phone,
+                    user_id: 1,
+                    createdAt: new Date().toISOString()
+                });
+            }
+
         } catch (error) {
             // por exemplo, o cpf já existe 
             res.status(400).send(error.message);
