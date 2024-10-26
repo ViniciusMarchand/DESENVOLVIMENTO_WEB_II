@@ -13,7 +13,7 @@ router.get('/', listaUsers);
 
 // router.get('/:id', detalhaUser);
 
-router.get('/add', paginaAddUser);
+router.get('/addUsers', paginaAddUser);
 
 router.post('/add', addUser);
 

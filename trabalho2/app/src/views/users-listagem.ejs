@@ -1,18 +1,46 @@
 <%- include('includes/head') %>
 
-<body>
-    <%- include('includes/nav') %>
+    <body>
+        <%- include('includes/nav') %>
+        <div class="px-6 mt-[100px]">
+            <a href="/users/addUsers" class="bg-[#2563E8] hover:bg-[#2333AA] p-2 rounded-md shadow-lg text-[#fdfdfd] font-bold">ADICIONAR USUARIO</a>
+            <br>
+            <div class="bg-white shadow-md rounded my-6">
+                <table class="min-w-full table-auto">
+                    <thead>
+                        <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left whitespace-nowrap">ID</th>
+                            <th class="py-3 px-6 text-left">Name</th>
+                            <!-- <th class="py-3 px-6 text-left">CPF</th> -->
+                            <th class="py-3 px-6 text-left">Email</th>
+                            <th class="py-3 px-6 text-left">Phone</th>
+                            <th class="py-3 px-6 text-left">Role</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-600 text-sm font-light">
+                        <% for (let i = 0; i < data.users.length; i++) { %>
+                            <tr class="border-b border-gray-200 hover:bg-gray-100">
+                                <td class="py-3 px-6 text-left whitespace-nowrap"><%= data.users[i].id %></td>
+                                <td class="py-3 px-6 text-left"><%=data.users[i].name%></td>
+                                <!-- <td class="py-3 px-6 text-left"><%=data.users[i].cpf%></td> -->
+                                <td class="py-3 px-6 text-left">john@example.com</td>
+                                <td class="py-3 px-6 text-left">(11) 98765-4321</td>
+                                <td class="py-3 px-6 text-left"><%=data.users[i].role%></td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
 
-    <a href="/users/add">ADICIONAR USUARIO</a>
-    <br>
-    <h1> <%= data.title %> </h1>
-    <ul>
-        <% for (let i = 0; i < data.users.length; i++) { %>
-            <li>
-                <%= data.users[i].name %> - <%= data.users[i].createdAt %>
-            </li>
-        <% } %>
-
-    </ul>
-</body>
-</html>
+            <div class="flex justify-between items-center mt-4">
+                <span class="text-sm text-gray-600">Showing 1 to 10 of 50 entries</span>
+                <nav class="inline-flex shadow-sm">
+                    <button class="px-3 py-1 bg-gray-300 text-gray-800 rounded-l-md">Previous</button>
+                    <button class="px-3 py-1 bg-gray-300 text-gray-800">1</button>
+                    <button class="px-3 py-1 bg-gray-300 text-gray-800">2</button>
+                    <button class="px-3 py-1 bg-gray-300 text-gray-800">3</button>
+                    <button class="px-3 py-1 bg-gray-300 text-gray-800">Next</button>
+                </nav>
+            </div>
+        </div>
+    </body>

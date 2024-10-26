@@ -5,10 +5,13 @@ import { User } from "../models/user-model.js";
 
 function listaUsers(req, res) {
     const userDao = new UserDao();
-    const usersRaw = userDao.list();
+
+    const { pagina } = req.params;
+
+    const usersRaw = userDao.list(pagina);
 
     // IDEALMENTE MAPEAMOS OS USERS (RAW/ BRUTA-CRUA DO BANCO DE DADOS PARA O MODEL USER)
-    const users = usersRaw.map(u => new User(u.name, u.email, u.password, u.created_at));
+    const users = usersRaw.map(u => new User(u.id, u.name, undefined, u.cpf, u.role, undefined));
     // no banco esta salvo como created_at (snake case)
     // no model estamos utilizando camelCase
 
@@ -37,14 +40,7 @@ function addUser(req, res) {
     try {
         const userDao = new UserDao();
 
-        // const { name, email, password } = req.body;
-        // userDao.save({
-        //     name, email, password
-        // })
-
         const dados = req.body;
-
-        console.log(dados)
 
         const emailDao = new EmailDao();
         const phoneDao = new PhoneDao();

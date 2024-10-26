@@ -26,11 +26,10 @@
 import { db } from "../config/database.js";
 
 class UserDao {
-    list() {
-        const stmt = db.prepare('SELECT * FROM users');
-        // const stmt = db.prepare('SELECT name, email FROM users');
-        const users = stmt.all();
-        console.log({ users })
+    list(pagina) {
+        const stmt = db.prepare('SELECT * FROM "users"');
+        const users = stmt.all({pagina});
+        // console.log({ users })
         
         return users;
     }
