@@ -1,6 +1,6 @@
 // import com {} importa apenas o Router de dentro do express
 import { Router } from 'express';
-import { listaUsers, paginaAddUser, addUser, detalhaUser } from '../controllers/users-controller.js';
+import { listaUsers, paginaAddUser, addUser, detalhaUser, paginaUpdateUser, updateUser } from '../controllers/users-controller.js';
 
 const router = Router();
 
@@ -16,5 +16,8 @@ router.get('/', listaUsers);
 router.get('/addUsers', paginaAddUser);
 
 router.post('/add', addUser);
+
+router.get('/updateUser/:id', paginaUpdateUser); 
+router.post('/updateUser/:id', updateUser); 
 
 export default router;

@@ -10,8 +10,15 @@ class PhoneDao {
     }
 
     save({ number, user_id, createdAt }) {
+        createdAt = createdAt && createdAt !== '' ? new Date(createdAt).toISOString() : new Date().toISOString();
+        console.log({ number, user_id, createdAt });
         const stmt = db.prepare('INSERT INTO phones (number, user_id, created_at) VALUES (@number, @user_id, @createdAt)');
         stmt.run({number, user_id, createdAt});
+    }
+
+    delete(id) {
+        const stmt = db.prepare('DELETE FROM phones WHERE user_id = ?');
+        return stmt.run(id); 
     }
 }
 
