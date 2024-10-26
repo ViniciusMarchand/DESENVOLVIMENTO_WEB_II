@@ -1,0 +1,123 @@
+<%- include('includes/head') %>
+
+<body class="min-w-screen min-h-screen bg-[#F3F4F6] flex justify-center items-center flex-col pt-[90px]">
+    <%- include('includes/nav') %>
+    <div class="w-full min-h-full flex justify-center items-center">
+        <main class="bg-[#fdfdfd] border-lg shadow-lg p-4 w-[300px] min-h-[550px] rounded-md mb-[50px]">
+            <h1 class="text-center text-[20px] font-bold"> <%= data.title %> </h1>
+            
+            <form id="updateForm" action="/users/updateUser/<%= data.user.id %>" method="post" class="flex flex-col items-center pt-2">
+                <div>
+                    <label for="name">Nome: </label>
+                    <input class="border border-lightgray rounded-md block w-full p-1" type="text" name="name" value="<%= data.user.name %>" required>
+                    <br>
+                    <label for="password">Senha: </label>
+                    <input class="border border-lightgray rounded-md block w-full p-1" type="password" name="password">
+                    <br>
+                    <label for="cpf">CPF: </label>
+                    <input class="border border-lightgray rounded-md block w-full p-1" type="text" name="cpf" value="<%= data.user.cpf %>" readonly>
+                    <br>
+                    <label for="role">Cargo: </label>
+                    <select name="role" class="border border-lightgray rounded-md block w-full p-1" disabled>
+                        <option value="admin" <%= data.user.role === 'admin' ? 'selected' : '' %>>Admin</option>
+                        <option value="user" <%= data.user.role === 'user' ? 'selected' : '' %>>User</option>
+                    </select>
+                    <br>
+                    <div id="email-area" class="flex flex-col gap-y-3">
+                        <div class="flex w-full justify-between">
+                            <label class="">Email(s):</label>
+                            <button title="Adicionar mais um email" onclick="addEmail()" type="button" class="bg-[#2563EB] text-[#fdfdfd] w-[25px] h-[25px] rounded-md flex items-center justify-center pb-[3px]">+</button>
+                        </div>
+                        <% if (Array.isArray(data.emails)) { %>
+                            <% data.emails.forEach(email => { %>
+                                <div class="flex items-center email-entry">
+                                    <input type="email" name="emails[]" class="border border-lightgray rounded-md block w-full p-1" value="<%= email.email %>">
+                                    <input type="hidden" name="emailCreatedAt[]" value="<%= email.created_at %>">
+                                    <button type="button" onclick="removeEmail(this)" class="bg-red-500 text-white ml-2 p-1 rounded">Excluir</button>
+                                </div>
+                            <% }) %>
+                        <% } else { %>
+                            <input type="email" name="emails[]" class="border border-lightgray rounded-md block w-full p-1" placeholder="Digite um email">
+                            <input type="hidden" name="emailCreatedAt[]" value="">
+                        <% } %>
+                    </div>
+                    <div id="tel-area" class="flex flex-col gap-y-3 mt-3">
+                        <div class="flex w-full justify-between">
+                            <label class="">Telefone(s):</label>
+                            <button title="Adicionar mais um telefone" onclick="addTelefone()" type="button" class="bg-[#2563EB] text-[#fdfdfd] w-[25px] h-[25px] rounded-md flex items-center justify-center pb-[3px]">+</button>
+                        </div>
+                        <% if (Array.isArray(data.phones)) { %>
+                            <% data.phones.forEach(phone => { %>
+                                <div class="flex items-center phone-entry">
+                                    <input type="tel" name="phones[]" class="border border-lightgray rounded-md block w-full p-1" value="<%= phone.number %>">
+                                    <input type="hidden" name="phoneCreatedAt[]" value="<%= phone.created_at %>">
+                                    <button type="button" onclick="removePhone(this)" class="bg-red-500 text-white ml-2 p-1 rounded">Excluir</button>
+                                </div>
+                            <% }) %>
+                        <% } else { %>
+                            <input type="tel" name="phones[]" class="border border-lightgray rounded-md block w-full p-1" placeholder="Digite um telefone">
+                            <input type="hidden" name="phoneCreatedAt[]" value="">
+                        <% } %>
+                    </div>
+                </div>
+                <button type="submit" class="bg-[#2563EB] text-[#fdfdfd] w-[190px] h-[30px] rounded-md flex items-center justify-center mt-5">ATUALIZAR</button>
+            </form>
+        </main>
+    </div>
+
+    <script>
+        function addEmail() {
+            const formArea = document.querySelector('#email-area');
+            const input = document.createElement('div');
+            input.className = 'flex items-center email-entry mt-2';
+            input.innerHTML = `
+                <input type="email" name="emails[]" class="border border-lightgray rounded-md block w-full p-1" placeholder="Digite um email">
+                <input type="hidden" name="emailCreatedAt[]" value="">
+                <button type="button" onclick="removeEmail(this)" class="bg-red-500 text-white ml-2 p-1 rounded">Excluir</button>
+            `;
+            formArea.appendChild(input);
+        }
+
+        function removeEmail(button) {
+            const emailContainer = button.parentElement;
+            emailContainer.style.display = 'none';
+        }
+
+        function addTelefone() {
+            const formArea = document.querySelector('#tel-area');
+            const input = document.createElement('div');
+            input.className = 'flex items-center phone-entry mt-2';
+            input.innerHTML = `
+                <input type="tel" name="phones[]" class="border border-lightgray rounded-md block w-full p-1" placeholder="Digite um telefone">
+                <input type="hidden" name="phoneCreatedAt[]" value="">
+                <button type="button" onclick="removePhone(this)" class="bg-red-500 text-white ml-2 p-1 rounded">Excluir</button>
+            `;
+            formArea.appendChild(input);
+        }
+
+        function removePhone(button) {
+            const phoneContainer = button.parentElement;
+            phoneContainer.style.display = 'none';
+        }
+
+        document.getElementById('updateForm').addEventListener('submit', function(event) {
+            const emailEntries = document.querySelectorAll('.email-entry');
+            const phoneEntries = document.querySelectorAll('.phone-entry');
+
+            emailEntries.forEach(entry => {
+                if (entry.style.display === 'none') {
+                    entry.querySelector('input[type="email"]').name = '';
+                    entry.querySelector('input[name="emailCreatedAt[]"]').name = '';
+                }
+            });
+
+            phoneEntries.forEach(entry => {
+                if (entry.style.display === 'none') {
+                    entry.querySelector('input[type="tel"]').name = '';
+                    entry.querySelector('input[name="phoneCreatedAt[]"]').name = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

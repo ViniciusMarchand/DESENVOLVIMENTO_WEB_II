@@ -27,6 +27,7 @@ import { db } from "../config/database.js";
 
 class UserDao {
     list(pagina) {
+        console.log({ db }); 
         const stmt = db.prepare('SELECT * FROM "users"');
         const users = stmt.all({pagina});
         // console.log({ users })
@@ -37,6 +38,34 @@ class UserDao {
     save({ name, password, cpf, role, createdAt }) {
         const stmt = db.prepare('INSERT INTO users (name, password, cpf, role, created_at) VALUES (@name, @password, @cpf, @role, @createdAt)');
         return stmt.run({name, password, cpf, role, createdAt});
+    }
+
+    async getById(id) {
+        return new Promise((resolve, reject) => {
+            const stmt = db.prepare('SELECT * FROM users WHERE id = ?');
+            const user = stmt.get(id); 
+            if (user) {
+                resolve(user);
+            } else {
+                reject(new Error('Usuário não encontrado.'));
+            }
+        });
+    }
+
+    update(id, userData) {
+        const { name, password } = userData;
+        const stmt = db.prepare('UPDATE users SET name = ?, password = ? WHERE id = ?');
+        return stmt.run(name, password, id); 
+    }
+
+    async getEmailsByUserId(userId) {
+        const stmt = db.prepare('SELECT * FROM emails WHERE user_id = ?');
+        return stmt.all(userId); 
+    }
+
+    async getPhonesByUserId(userId) {
+        const stmt = db.prepare('SELECT * FROM phones WHERE user_id = ?');
+        return stmt.all(userId); 
     }
 }
 
