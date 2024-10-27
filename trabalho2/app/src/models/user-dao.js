@@ -27,12 +27,19 @@ import { db } from "../config/database.js";
 
 class UserDao {
     list(pagina) {
-        console.log({ db }); 
-        const stmt = db.prepare('SELECT * FROM "users"');
+        pagina = (pagina - 1) * 10;
+        const stmt = db.prepare('SELECT * FROM "users" order by id LIMIT 10 OFFSET @pagina');
         const users = stmt.all({pagina});
         // console.log({ users })
         
         return users;
+    }
+
+    totalUsers() {
+        const stmt = db.prepare('SELECT COUNT(*) as total FROM "users"');
+        const total = stmt.get();
+        
+        return total.total;
     }
 
     save({ name, password, cpf, role, createdAt }) {

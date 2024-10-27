@@ -16,9 +16,18 @@ class PhoneDao {
         stmt.run({number, user_id, createdAt});
     }
 
+
     delete(id) {
         const stmt = db.prepare('DELETE FROM phones WHERE user_id = ?');
         return stmt.run(id); 
+    }
+  
+    findByUserId(userId) {
+        userId = parseInt(userId);
+        const stmt = db.prepare('SELECT * FROM phones WHERE user_id = @userId');
+        const phones = stmt.all({ userId });
+        
+        return phones;
     }
 }
 

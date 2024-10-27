@@ -1,23 +1,52 @@
 import { EmailDao } from "../models/email-dao.js";
+import { Email } from "../models/email-model.js";
 import { PhoneDao } from "../models/phone-dao.js";
+import { Phone } from "../models/phone-model.js";
 import { UserDao } from "../models/user-dao.js";
 import { User } from "../models/user-model.js";
 
 function listaUsers(req, res) {
     const userDao = new UserDao();
 
-    const { pagina } = req.params;
+    const { pagina } = req.query;
 
-    const usersRaw = userDao.list(pagina);
+    const usersRaw = userDao.list(pagina || 1);  
+
+    const totalUsers = userDao.totalUsers();
+
+    const totalPages = Math.ceil(totalUsers / 10);
+
+    console.log("totalUsers", totalUsers);
 
     // IDEALMENTE MAPEAMOS OS USERS (RAW/ BRUTA-CRUA DO BANCO DE DADOS PARA O MODEL USER)
     const users = usersRaw.map(u => new User(u.id, u.name, undefined, u.cpf, u.role, undefined));
     // no banco esta salvo como created_at (snake case)
     // no model estamos utilizando camelCase
 
+    const usersWithEmails = users.map(u => {
+        const emilDao = new EmailDao();
+        const telefoneDao = new PhoneDao();
+        
+        const emailsRaw = emilDao.findByUserId(u.id);
+        const telefonesRaw = telefoneDao.findByUserId(u.id);
+        const emails = emailsRaw.map(e => new Email(e.id, e.email, e.user_id, e.created_at));
+        const telefones = telefonesRaw.map(t => new Phone(t.id, t.number, t.user_id));
+
+        console.log(telefones)
+        return {
+            ...u,
+            emails: emails,
+            telefones: telefones
+        }
+    });
+    
+    console.log({ usersWithEmails });
+
     const data = {
         title: "WEB II",
-        users
+        users: usersWithEmails,
+        totalPages,
+        pagina,
     }
     res.render('users-listagem', { data });
     // o return é opcional aqui, cuidado para nao dar dois renders ao mesmo tempo
@@ -45,7 +74,7 @@ function addUser(req, res) {
         const emailDao = new EmailDao();
         const phoneDao = new PhoneDao();
         try {
-            const newUser = new User(dados.name, dados.password, dados.cpf, dados.role);
+            const newUser = new User(0, dados.name, dados.password, dados.cpf, dados.role);
             const lastIdCreated = userDao.save(newUser).lastInsertRowid;
 
             if (Array.isArray(dados.email)) {
@@ -59,7 +88,7 @@ function addUser(req, res) {
             } else {
                 emailDao.save({
                     email: dados.email,
-                    user_id: 1,
+                    user_id: lastIdCreated,
                     createdAt: new Date().toISOString()
                 });
             }
@@ -75,21 +104,19 @@ function addUser(req, res) {
             } else {
                 phoneDao.save({
                     number: dados.phone,
-                    user_id: 1,
+                    user_id: lastIdCreated,
                     createdAt: new Date().toISOString()
                 });
             }
-
         } catch (error) {
             // por exemplo, o cpf já existe 
             res.status(400).send(error.message);
         }
-        res.redirect("/users");
+        res.redirect("/users?pagina=1");
     } catch (error) {
         res.status(500).send("HOUVE UM ERRO AO ADICIONAR USUARIO");
     }
 }
-
 
 function detalhaUser(req, res) {
     const { id } = req.params;
