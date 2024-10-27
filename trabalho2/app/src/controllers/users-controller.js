@@ -126,6 +126,95 @@ function detalhaUser(req, res) {
     res.send("DETALHES DO USUARIO ID " + id);
 }
 
+
+async function paginaUpdateUser(req, res) {
+    const { id } = req.params;
+    const userDao = new UserDao();
+    const emails = await userDao.getEmailsByUserId(id); 
+    const phones = await userDao.getPhonesByUserId(id); 
+
+    
+    try {
+        const user = await userDao.getById(id); 
+        const data = {
+            title: "WEB II - Update User",
+            user,
+            emails,
+            phones
+        };
+        // console.log({ data });
+        // console.log(data.emails);
+        // console.log(data.phones);
+        res.render('users-update', { data });
+    } catch (error) {
+        res.status(500).send("Erro ao carregar os dados do usuário.: " + error.message);
+    }
+}
+
+
+async function updateUser(req, res) {
+    const { id } = req.params;
+    const userDao = new UserDao();
+    const emailDao = new EmailDao();
+    const phoneDao = new PhoneDao();
+    
+    const dados = req.body;
+
+    console.log({ dados });
+
+    try {
+        userDao.update(id, {
+            name: dados.name,
+            password: dados.password, 
+        });
+
+        
+        await emailDao.delete(id);
+
+        // Atualiza os emails
+        if (Array.isArray(dados['emails[]'])) {
+            dados['emails[]'].forEach((email, index) => {
+                emailDao.save({
+                    email,
+                    user_id: id,
+                    createdAt: dados['emailCreatedAt[]'][index]
+                });
+            });
+        } else {
+            emailDao.save({
+                email: dados['emails[]'],
+                user_id: id,
+                createdAt: dados['emailCreatedAt[]']
+            });
+        }
+
+        // Deleta todos os telefones antigos relacionados ao usuário
+        await phoneDao.delete(id);
+
+        // Atualiza os telefones
+        if (Array.isArray(dados['phones[]'])) {
+            dados['phones[]'].forEach((phone, index) => {
+                phoneDao.save({
+                    number: phone,
+                    user_id: id,
+                    createdAt: dados['phoneCreatedAt[]'][index]
+                });
+            });
+        } else {
+            phoneDao.save({
+                number: dados['phones[]'],
+                user_id: id,
+                createdAt: dados['phoneCreatedAt[]']
+            });
+        }
+
+        res.redirect("/users");
+    } catch (error) {
+        res.status(500).send("Erro ao atualizar usuário: " + error);
+    }
+}
+
+
 export {
     addUser,        // O cpf tem que  ser unico + o perfil (ADMIN/CLIENTE) já é setado na etapa inicial
     listaUsers,     // paginacao (a cada 5) e filtro (pelo nome)
@@ -140,4 +229,6 @@ export {
     // INDIVIDUAL ou DUPLA E VCS TEM DUAS SEMANAS =)
 
     detalhaUser,
+    paginaUpdateUser,
+    updateUser
 };
