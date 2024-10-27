@@ -13,6 +13,14 @@ class PhoneDao {
         const stmt = db.prepare('INSERT INTO phones (number, user_id, created_at) VALUES (@number, @user_id, @createdAt)');
         stmt.run({number, user_id, createdAt});
     }
+
+    findByUserId(userId) {
+        userId = parseInt(userId);
+        const stmt = db.prepare('SELECT * FROM phones WHERE user_id = @userId');
+        const phones = stmt.all({ userId });
+        
+        return phones;
+    }
 }
 
 export {
