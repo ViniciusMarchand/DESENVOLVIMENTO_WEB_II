@@ -9,7 +9,7 @@ class Email {
         //     this.createdAt = Date.now();
         // }
 
-        this.createdAt = createdAt ?? Date.now();
+        this.createdAt = Date.now();
     }
 }
 

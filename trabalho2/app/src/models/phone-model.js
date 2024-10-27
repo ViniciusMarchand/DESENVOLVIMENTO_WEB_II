@@ -1,7 +1,7 @@
 class Phone {
     constructor(id, number, userId) {
         this.id = id;
-        this.email = email;
+        this.number = number;
         this.userId = userId;
         // if (createdAt) {
         //     this.createdAt = createdAt;
@@ -9,7 +9,7 @@ class Phone {
         //     this.createdAt = Date.now();
         // }
 
-        this.createdAt = createdAt ?? Date.now();
+        this.createdAt = Date.now();
     }
 }
 

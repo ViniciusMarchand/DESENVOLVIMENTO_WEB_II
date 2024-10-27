@@ -8,12 +8,12 @@ const router = Router();
 // router.get('/', (req, res) => {
 //     return listaUsers(req, res);
 // });
+router.get('/addUsers', paginaAddUser);
 
 router.get('/', listaUsers);
 
 // router.get('/:id', detalhaUser);
 
-router.get('/addUsers', paginaAddUser);
 
 router.post('/add', addUser);
 
