@@ -8,15 +8,24 @@ import { User } from "../models/user-model.js";
 function listaUsers(req, res) {
     const userDao = new UserDao();
 
-    const pagina  = req.query.pagina || 1;
+    const pagina  = req.query.pagina;
 
-    const usersRaw = userDao.list(pagina || 1);  
+    const name = req.query.name;
 
-    const totalUsers = userDao.totalUsers();
+    if(!pagina)
+        res.redirect("/users?pagina=1")
+
+    let usersRaw, totalUsers;
+    
+    if(name==undefined || name==""){
+        usersRaw = userDao.list(pagina);  
+        totalUsers = userDao.totalUsers();
+    } else {
+        usersRaw = userDao.listByName(pagina, name);
+        totalUsers = userDao.totalUsersByName(name);
+    }
 
     const totalPages = Math.ceil(totalUsers / 5);
-
-    console.log("totalUsers", totalUsers);
 
     // IDEALMENTE MAPEAMOS OS USERS (RAW/ BRUTA-CRUA DO BANCO DE DADOS PARA O MODEL USER)
     const users = usersRaw.map(u => new User(u.id, u.name, undefined, u.cpf, u.role, undefined));

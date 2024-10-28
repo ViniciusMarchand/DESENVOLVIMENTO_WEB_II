@@ -30,10 +30,18 @@ class UserDao {
         pagina = (pagina - 1) * 5;
         const stmt = db.prepare('SELECT * FROM "users" order by id LIMIT 5 OFFSET @pagina');
         const users = stmt.all({pagina});
-        // console.log({ users })
         
         return users;
     }
+
+    listByName(pagina, name) {
+        pagina = (pagina - 1) * 5;
+        const stmt = db.prepare('SELECT * FROM "users" WHERE name LIKE @name order by id LIMIT 5 OFFSET @pagina');
+        const users = stmt.all({name: `%${name}%`, pagina});
+        
+        return users;
+    }
+
 
     findByName(id) {
         const stmt = db.prepare('SELECT * FROM "users" WHERE id = @id');
@@ -44,6 +52,13 @@ class UserDao {
     totalUsers() {
         const stmt = db.prepare('SELECT COUNT(*) as total FROM "users"');
         const total = stmt.get();
+        
+        return total.total;
+    }
+
+    totalUsersByName(name) {
+        const stmt = db.prepare('SELECT COUNT(*) as total FROM "users" WHERE name LIKE @name');
+        const total = stmt.get({name: `%${name}%`});
         
         return total.total;
     }

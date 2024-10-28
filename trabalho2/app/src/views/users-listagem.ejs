@@ -2,83 +2,147 @@
 
     <body>
         <%- include('includes/nav') %>
-        <div class="px-6 mt-[100px]">
-            <a href="/users/addUsers" class="bg-[#2563E8] hover:bg-[#2333AA] p-2 rounded-md shadow-lg text-[#fdfdfd] font-bold">ADICIONAR USUARIO</a>
-            <br>
-            <div class="bg-white shadow-md rounded my-6">
-                <table class="min-w-full table-auto">
-                    <thead class="bg-gray-200 w-full">
-                        <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                            <th class="py-3 px-6 text-left whitespace-nowrap">ID</th>
-                            <th class="py-3 px-6 text-left">Name</th>
-                            <!-- <th class="py-3 px-6 text-left">CPF</th> -->
-                            <th class="py-3 px-6 text-left">Email</th>
-                            <th class="py-3 px-6 text-left">Phone</th>
-                            <th class="py-3 px-6 text-left" colspan="2">Role</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-gray-600 text-sm font-light">
-                        <% for (let i = 0; i < data.users.length; i++) { %>
-                            <tr id="user-<%= data.users[i].id %>" class="border-b border-gray-200 hover:bg-gray-100">
-                                <td class="py-3 px-6 text-left whitespace-nowrap"><%= data.users[i].id %></td>
-                                <td class="py-3 px-6 text-left"><%=data.users[i].name%></td>
-                                <!-- <td class="py-3 px-6 text-left"><%=data.users[i].cpf%></td> -->
-                                <td class="py-3 px-6 text-left"><%= data.users[i].emails[0]?.email %></td>
-                                <td class="py-3 px-6 text-left"><%= data.users[i].telefones[0]?.number %></td>
-                                <td class="py-3 px-6 text-left"><%=data.users[i].role%></td>
-                                <td>
-                                    <div class="flex gap-x-1">
-                                        <a href="users/updateUser/<%= data.users[i].id%>" title="edit user">
-                                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15" height="15" viewBox="0 0 24 24">
-                                            <path d="M 19.171875 2 C 18.448125 2 17.724375 2.275625 17.171875 2.828125 L 16 4 L 20 8 L 21.171875 6.828125 C 22.275875 5.724125 22.275875 3.933125 21.171875 2.828125 C 20.619375 2.275625 19.895625 2 19.171875 2 z M 14.5 5.5 L 3 17 L 3 21 L 7 21 L 18.5 9.5 L 14.5 5.5 z"></path>
-                                            </svg>
-                                        </a>
-                                        <%if(data.users[i].role !== "admin") {%>
-                                        <button title="delete user" onclick="deleteUser('<%=data.users[i].id %>')">
-                                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15" height="15" viewBox="0 0 30 30">
-                                                <path d="M 14.984375 2.4863281 A 1.0001 1.0001 0 0 0 14 3.5 L 14 4 L 8.5 4 A 1.0001 1.0001 0 0 0 7.4863281 5 L 6 5 A 1.0001 1.0001 0 1 0 6 7 L 24 7 A 1.0001 1.0001 0 1 0 24 5 L 22.513672 5 A 1.0001 1.0001 0 0 0 21.5 4 L 16 4 L 16 3.5 A 1.0001 1.0001 0 0 0 14.984375 2.4863281 z M 6 9 L 7.7929688 24.234375 C 7.9109687 25.241375 8.7633438 26 9.7773438 26 L 20.222656 26 C 21.236656 26 22.088031 25.241375 22.207031 24.234375 L 24 9 L 6 9 z"></path>
-                                            </svg>
-                                        </button>
-                                        <%}%>
-                                        <a href="users/<%= data.users[i].id%>">
-                                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15" height="15" viewBox="0 0 50 50">
-                                                <path d="M 25 2 C 12.309295 2 2 12.309295 2 25 C 2 37.690705 12.309295 48 25 48 C 37.690705 48 48 37.690705 48 25 C 48 12.309295 37.690705 2 25 2 z M 25 4 C 36.609824 4 46 13.390176 46 25 C 46 36.609824 36.609824 46 25 46 C 13.390176 46 4 36.609824 4 25 C 4 13.390176 13.390176 4 25 4 z M 24 13 L 24 24 L 13 24 L 13 26 L 24 26 L 24 37 L 26 37 L 26 26 L 37 26 L 37 24 L 26 24 L 26 13 L 24 13 z"></path>
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </td>
+            <div class="px-6 mt-[100px]">
+                <div class="flex gap-x-2">
+                    <a href="/users/addUsers"
+                        class="bg-[#2563E8] hover:bg-[#2333AA] p-2 rounded-md shadow-lg text-[#fdfdfd] font-bold">ADICIONAR
+                        USUARIO</a>
+                    <div class="flex">
+                        <input id="filtro" type="text" name="" id=""
+                            class="border border-lightgray rounded-l-md block w-[200px] p-1 text-center"
+                            placeholder="filtrar por nome">
+                        <button
+                            class="bg-[#2563E8] hover:bg-[#2333AA] p-2 rounded-r-md shadow-lg text-[#fdfdfd] font-bold w-[40px] flex justify-center items-center"
+                            onclick="filtrarPorNome()">
+                            <svg fill="white" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20"
+                                viewBox="0 0 50 50">
+                                <path
+                                    d="M 21 3 C 11.621094 3 4 10.621094 4 20 C 4 29.378906 11.621094 37 21 37 C 24.710938 37 28.140625 35.804688 30.9375 33.78125 L 44.09375 46.90625 L 46.90625 44.09375 L 33.90625 31.0625 C 36.460938 28.085938 38 24.222656 38 20 C 38 10.621094 30.378906 3 21 3 Z M 21 5 C 29.296875 5 36 11.703125 36 20 C 36 28.296875 29.296875 35 21 35 C 12.703125 35 6 28.296875 6 20 C 6 11.703125 12.703125 5 21 5 Z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <br>
+                <div class="bg-white shadow-md rounded mb-6">
+                    <table class="min-w-full table-auto">
+                        <thead class="bg-gray-200 w-full">
+                            <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                                <th class="py-3 px-6 text-left whitespace-nowrap">ID</th>
+                                <th class="py-3 px-6 text-left">Name</th>
+                                <th class="py-3 px-6 text-left">Email</th>
+                                <th class="py-3 px-6 text-left">Phone</th>
+                                <th class="py-3 px-6 text-left" colspan="2">Role</th>
                             </tr>
-                        <% } %>
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody class="text-gray-600 text-sm font-light">
+                            <% for (let i=0; i < data.users.length; i++) { %>
+                                <tr id="user-<%= data.users[i].id %>"
+                                    class="border-b border-gray-200 hover:bg-gray-100">
+                                    <td class="py-3 px-6 text-left whitespace-nowrap">
+                                        <%= data.users[i].id %>
+                                    </td>
+                                    <td class="py-3 px-6 text-left">
+                                        <%=data.users[i].name%>
+                                    </td>
+                                    <td class="py-3 px-6 text-left">
+                                        <%= data.users[i].emails[0]?.email %>
+                                    </td>
+                                    <td class="py-3 px-6 text-left">
+                                        <%= data.users[i].telefones[0]?.number %>
+                                    </td>
+                                    <td class="py-3 px-6 text-left">
+                                        <%=data.users[i].role%>
+                                    </td>
+                                    <td>
+                                        <div class="flex gap-x-1">
+                                            <a href="users/updateUser/<%= data.users[i].id%>" title="edit user">
+                                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15"
+                                                    height="15" viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M 19.171875 2 C 18.448125 2 17.724375 2.275625 17.171875 2.828125 L 16 4 L 20 8 L 21.171875 6.828125 C 22.275875 5.724125 22.275875 3.933125 21.171875 2.828125 C 20.619375 2.275625 19.895625 2 19.171875 2 z M 14.5 5.5 L 3 17 L 3 21 L 7 21 L 18.5 9.5 L 14.5 5.5 z">
+                                                    </path>
+                                                </svg>
+                                            </a>
+                                            <%if(data.users[i].role !=="admin" ) {%>
+                                                <button title="delete user"
+                                                    onclick="deleteUser('<%=data.users[i].id %>')">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15"
+                                                        height="15" viewBox="0 0 30 30">
+                                                        <path
+                                                            d="M 14.984375 2.4863281 A 1.0001 1.0001 0 0 0 14 3.5 L 14 4 L 8.5 4 A 1.0001 1.0001 0 0 0 7.4863281 5 L 6 5 A 1.0001 1.0001 0 1 0 6 7 L 24 7 A 1.0001 1.0001 0 1 0 24 5 L 22.513672 5 A 1.0001 1.0001 0 0 0 21.5 4 L 16 4 L 16 3.5 A 1.0001 1.0001 0 0 0 14.984375 2.4863281 z M 6 9 L 7.7929688 24.234375 C 7.9109687 25.241375 8.7633438 26 9.7773438 26 L 20.222656 26 C 21.236656 26 22.088031 25.241375 22.207031 24.234375 L 24 9 L 6 9 z">
+                                                        </path>
+                                                    </svg>
+                                                </button>
+                                                <%}%>
+                                                    <a href="users/<%= data.users[i].id%>">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                                            width="15" height="15" viewBox="0 0 50 50">
+                                                            <path
+                                                                d="M 25 2 C 12.309295 2 2 12.309295 2 25 C 2 37.690705 12.309295 48 25 48 C 37.690705 48 48 37.690705 48 25 C 48 12.309295 37.690705 2 25 2 z M 25 4 C 36.609824 4 46 13.390176 46 25 C 46 36.609824 36.609824 46 25 46 C 13.390176 46 4 36.609824 4 25 C 4 13.390176 13.390176 4 25 4 z M 24 13 L 24 24 L 13 24 L 13 26 L 24 26 L 24 37 L 26 37 L 26 26 L 37 26 L 37 24 L 26 24 L 26 13 L 24 13 z">
+                                                            </path>
+                                                        </svg>
+                                                    </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <% } %>
+                        </tbody>
+                    </table>
+                </div>
 
-            <div class="flex justify-between items-center mt-4">
-                <span class="text-sm text-gray-600">Showing 1 to 10 of 50 entries</span>
-                <nav class="inline-flex shadow-sm">                    
-                    <a href="?pagina=<%= data.pagina < 2 ?  data.pagina : (data.pagina - 1)%>"><button class="px-3 py-1 bg-gray-300 text-gray-800 rounded-l-md">Previous</button></a>
-                    <% for (let i = 1; i <= data.totalPages; i++) { %>
-                        <a href="?pagina=<%=i%>"><button class="px-3 py-1 bg-gray-300 text-gray-800"><%= i %></button></a>
-                    <%  }  %>
-                    <a href="?pagina=<%= data.pagina < data.totalPages ? (parseInt(data.pagina) + 1) : data.pagina%>"><button class="px-3 py-1 bg-gray-300 text-gray-800 rounded-r-md">Next</button></a>
-                </nav>
+                <div class="flex justify-between items-center mt-4">
+                    <span class="text-sm text-gray-600">Showing 1 to 10 of 50 entries</span>
+                    <nav class="inline-flex shadow-sm">
+                        <a href="#" data-page="<%= data.pagina < 2 ?  data.pagina : (data.pagina - 1)%>" class="pagination-link"><button
+                                class="px-3 py-1 bg-gray-300 text-gray-800 rounded-l-md">Previous</button></a>
+                        <% for (let i=1; i <=data.totalPages; i++) { %>
+                            <a href="#" data-page="<%= i%>" class="pagination-link"><button class="px-3 py-1 bg-gray-300 text-gray-800">
+                                    <%= i %>
+                                </button></a>
+                            <% } %>
+                                <a href="#" data-page="<%= data.pagina < data.totalPages ? (parseInt(data.pagina) + 1) : data.pagina%>" class="pagination-link">
+                                    <button class="px-3 py-1 bg-gray-300 text-gray-800 rounded-r-md">Next</button>
+                                </a>
+                    </nav>
+                </div>
             </div>
-        </div>
-        <script>
-            function deleteUser(id) {
-                fetch(`/users/deleteUser/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }).then(response => {
-                    removeUser(id);
-                });
-            }
+            <script>
+                function deleteUser(id) {
+                    fetch(`/users/deleteUser/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(response => {
+                        removeUser(id);
+                    });
+                }
 
-            function removeUser(id) {
-                const user = document.getElementById(`user-${id}`);
-                user.remove();
-            }
-        </script>
+                function removeUser(id) {
+                    const user = document.getElementById(`user-${id}`);
+                    user.remove();
+                }
+
+                function filtrarPorNome() {
+                    const filtro = document.getElementById('filtro').value;
+                    window.location.href = `users?pagina=1&name=${filtro}`;
+                }
+
+                const links = document.querySelectorAll('.pagination-link');
+    
+                links.forEach(link => {
+                const pageNumber = link.getAttribute('data-page');
+        
+                const url = new URL(window.location.href);
+                url.searchParams.set('pagina', pageNumber);
+
+                link.href = url.toString();
+
+                const filtro = document.getElementById('filtro');
+                const filtroName = url.searchParams.get('name');
+                filtro.value = filtroName;
+    });
+
+            </script>
     </body>
