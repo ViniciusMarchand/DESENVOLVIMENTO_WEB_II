@@ -28,14 +28,20 @@
                             <label class="">Email(s):</label>
                             <button title="Adicionar mais um email" onclick="addEmail()" type="button" class="bg-[#2563EB] text-[#fdfdfd] w-[25px] h-[25px] rounded-md flex items-center justify-center pb-[3px]">+</button>
                         </div>
-                        <input type="email" name="email" class="border border-lightgray rounded-md block w-full p-1">
+                        <div class="flex items-center email-entry">
+                            <input placeholder="Digite um email" type="email" name="email" class="border border-lightgray rounded-md block w-full p-1">
+                            <button type="button" onclick="remove(this)" class="bg-red-500 text-white ml-2 p-1 rounded">Excluir</button>
+                        </div>
                     </div>
                     <div id="tel-area" class="flex flex-col gap-y-3 mt-3">
                         <div class="flex w-full justify-between">
                             <label class="">Telefone(s):</label>
                             <button title="Adicionar mais um telefone" onclick="addTelefone()" type="button" class="bg-[#2563EB] text-[#fdfdfd] w-[25px] h-[25px] rounded-md flex items-center justify-center pb-[3px]">+</button>
                         </div>
-                        <input type="tel" name="phone" class="border border-lightgray rounded-md block w-full p-1">
+                        <div class="flex items-center phone-entry">
+                            <input type="tel" name="phone" class="border border-lightgray rounded-md block w-full p-1" placeholder="Digite um telefone">
+                            <button type="button" onclick="remove(this)" class="bg-red-500 text-white ml-2 p-1 rounded">Excluir</button>
+                        </div>
                     </div>
                 </div>
                 <button type="submit" class="bg-[#2563EB] text-[#fdfdfd] w-[190px] h-[30px] rounded-md flex items-center justify-center mt-5">CADASTRAR</button>
@@ -46,20 +52,32 @@
     <script>
         function addEmail() {
             const formArea = document.querySelector('#email-area');
-            const input = document.createElement('input');
-            input.type = 'email';
-            input.name = 'email';
-            input.className = "border border-lightgray rounded-md block w-full p-1 mt-3"
-            document.querySelector('#email-area').appendChild(input);
+            const input = document.createElement('div');
+            input.className = 'flex items-center email-entry mt-2';
+            input.innerHTML = `
+                <input type="email" name="email" class="border border-lightgray rounded-md block w-full p-1" placeholder="Digite um email">
+                <button type="button" onclick="remove(this)" class="bg-red-500 text-white ml-2 p-1 rounded">Excluir</button>
+            `;
+            formArea.appendChild(input);
         }
+
+        function remove(button) {
+            const emailContainer = button.parentElement;
+            emailContainer.style.display = 'none';
+        }
+
+
         function addTelefone() {
             const formArea = document.querySelector('#tel-area');
-            const input = document.createElement('input');
-            input.type = 'tel';
-            input.name = 'phone';
-            input.className = "border border-lightgray rounded-md block w-full p-1 mt-3"
-            document.querySelector('#tel-area').appendChild(input);
+            const input = document.createElement('div');
+            input.className = 'flex items-center phone-entry mt-2';
+            input.innerHTML = `
+                <input type="tel" name="phone" class="border border-lightgray rounded-md block w-full p-1" placeholder="Digite um telefone">
+                <button type="button" onclick="remove(this)" class="bg-red-500 text-white ml-2 p-1 rounded">Excluir</button>
+            `;
+            formArea.appendChild(input);
         }
+        
     </script>
 </body>
 </html>
