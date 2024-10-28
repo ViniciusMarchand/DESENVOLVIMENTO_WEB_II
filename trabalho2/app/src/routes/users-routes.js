@@ -8,10 +8,10 @@ const router = Router();
 // router.get('/', (req, res) => {
 //     return listaUsers(req, res);
 // });
-router.get('/addUsers', paginaAddUser);
+router.get('/addUser', paginaAddUser);
 
 
-router.get('/', listaUsers);
+router.get('/users', listaUsers);
 
 // router.get('/:id', detalhaUser);
 
@@ -21,5 +21,5 @@ router.post('/add', addUser);
 router.get('/updateUser/:id', paginaUpdateUser); 
 router.post('/updateUser/:id', updateUser); 
 router.delete('/deleteUser/:id', deleteUser);
-router.get('/:id', paginaDetailsUser);
+router.get('/users/:id', paginaDetailsUser);
 export default router;

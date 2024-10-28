@@ -31,7 +31,7 @@ try {
     });
 
     // importar as rotas de usuario e adicionar ao meu app
-    app.use('/users', usersRouter);
+    app.use('/', usersRouter);
 
     app.listen(3000, () => console.log("Server iniciou na porta 3000"));
 } catch (error) {

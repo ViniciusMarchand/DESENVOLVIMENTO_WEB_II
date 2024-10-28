@@ -254,7 +254,7 @@ async function deleteUser(req, res) {
     const phoneDao = new PhoneDao();
 
     try {
-        const user = userDao.findByUserId(id);
+        const user = userDao.getById(id);
         if (user.role === 'ADMIN') {
             res.status(400).send("Não é possível deletar um usuário administrador.");
             return;
@@ -266,6 +266,7 @@ async function deleteUser(req, res) {
 
         res.redirect("/users");
     } catch (error) {
+        console.log(error.message)
         res.status(500).send("Erro ao deletar usuário: " + error);
     }
 }
