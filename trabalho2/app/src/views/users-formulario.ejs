@@ -9,13 +9,13 @@
             <form action="/users/add" method="post" class="flex flex-col items-center pt-2">
                 <div>
                     <label for="name">Nome: </label>
-                    <input class="border border-lightgray rounded-md block w-full p-1" type="text" name="name">
+                    <input required class="border border-lightgray rounded-md block w-full p-1" type="text" name="name">
                     <br>
                     <label for="password">Senha: </label>
-                    <input class="border border-lightgray rounded-md block w-full p-1" type="password" name="password">
+                    <input required class="border border-lightgray rounded-md block w-full p-1" type="password" name="password">
                     <br>
                     <label for="cpf">CPF: </label>
-                    <input class="border border-lightgray rounded-md block w-full p-1" type="text" name="cpf">
+                    <input required class="border border-lightgray rounded-md block w-full p-1" type="text" name="cpf">
                     <br>
                     <label for="phone">Cargo: </label>
                     <select name="role" class="border border-lightgray rounded-md block w-full p-1">
@@ -28,9 +28,9 @@
                             <label class="">Email(s):</label>
                             <button title="Adicionar mais um email" onclick="addEmail()" type="button" class="bg-[#2563EB] text-[#fdfdfd] w-[25px] h-[25px] rounded-md flex items-center justify-center pb-[3px]">+</button>
                         </div>
-                        <div class="flex items-center email-entry">
-                            <input placeholder="Digite um email" type="email" name="email" class="border border-lightgray rounded-md block w-full p-1">
-                            <button type="button" onclick="remove(this)" class="bg-red-500 text-white ml-2 p-1 rounded">Excluir</button>
+                        <div class="email-entry">
+                            <p class="text-[13px]">Email principal</p>
+                            <input required placeholder="Digite o email principal" type="email" name="email" class="border border-lightgray rounded-md block w-full p-1">
                         </div>
                     </div>
                     <div id="tel-area" class="flex flex-col gap-y-3 mt-3">
@@ -38,9 +38,9 @@
                             <label class="">Telefone(s):</label>
                             <button title="Adicionar mais um telefone" onclick="addTelefone()" type="button" class="bg-[#2563EB] text-[#fdfdfd] w-[25px] h-[25px] rounded-md flex items-center justify-center pb-[3px]">+</button>
                         </div>
-                        <div class="flex items-center phone-entry">
-                            <input type="tel" name="phone" class="border border-lightgray rounded-md block w-full p-1" placeholder="Digite um telefone">
-                            <button type="button" onclick="remove(this)" class="bg-red-500 text-white ml-2 p-1 rounded">Excluir</button>
+                        <div class="phone-entry">
+                            <p class="text-[13px]">Telefone principal</p>
+                            <input required type="tel" name="phone" class="border border-lightgray rounded-md block w-full p-1" placeholder="Digite o telefone principal">
                         </div>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
             const input = document.createElement('div');
             input.className = 'flex items-center email-entry mt-2';
             input.innerHTML = `
-                <input type="email" name="email" class="border border-lightgray rounded-md block w-full p-1" placeholder="Digite um email">
+                <input required type="email" name="email" class="border border-lightgray rounded-md block w-full p-1" placeholder="Digite um email">
                 <button type="button" onclick="remove(this)" class="bg-red-500 text-white ml-2 p-1 rounded">Excluir</button>
             `;
             formArea.appendChild(input);
@@ -63,7 +63,7 @@
 
         function remove(button) {
             const emailContainer = button.parentElement;
-            emailContainer.style.display = 'none';
+            emailContainer.remove();
         }
 
 
@@ -72,7 +72,7 @@
             const input = document.createElement('div');
             input.className = 'flex items-center phone-entry mt-2';
             input.innerHTML = `
-                <input type="tel" name="phone" class="border border-lightgray rounded-md block w-full p-1" placeholder="Digite um telefone">
+                <input required type="tel" name="phone" class="border border-lightgray rounded-md block w-full p-1" placeholder="Digite um telefone">
                 <button type="button" onclick="remove(this)" class="bg-red-500 text-white ml-2 p-1 rounded">Excluir</button>
             `;
             formArea.appendChild(input);

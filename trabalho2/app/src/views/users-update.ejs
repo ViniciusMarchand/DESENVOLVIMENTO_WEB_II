@@ -12,7 +12,7 @@
                     <input class="border border-lightgray rounded-md block w-full p-1" type="text" name="name" value="<%= data.user.name %>" required>
                     <br>
                     <label for="password">Senha: </label>
-                    <input class="border border-lightgray rounded-md block w-full p-1" type="password" name="password">
+                    <input required class="border border-lightgray rounded-md block w-full p-1" type="password" name="password">
                     <br>
                     <label for="cpf">CPF: </label>
                     <input class="border border-lightgray rounded-md block w-full p-1" type="text" name="cpf" value="<%= data.user.cpf %>" readonly>
@@ -30,10 +30,10 @@
                         </div>
                         <% if (Array.isArray(data.emails)) { %>
                             <% data.emails.forEach(email => { %>
-                                <div class="flex items-center email-entry">
-                                    <input type="email" name="emails[]" class="border border-lightgray rounded-md block w-full p-1" value="<%= email.email %>">
+                                <div class="email-entry">
+                                    <p class="text-[13px]">Email principal</p>
+                                    <input required type="email" name="emails[]" class="border border-lightgray rounded-md block w-full p-1" value="<%= email.email %>">
                                     <input type="hidden" name="emailCreatedAt[]" value="<%= email.created_at %>">
-                                    <button type="button" onclick="removeEmail(this)" class="bg-red-500 text-white ml-2 p-1 rounded">Excluir</button>
                                 </div>
                             <% }) %>
                         <% } else { %>
@@ -48,10 +48,10 @@
                         </div>
                         <% if (Array.isArray(data.phones)) { %>
                             <% data.phones.forEach(phone => { %>
-                                <div class="flex items-center phone-entry">
-                                    <input type="tel" name="phones[]" class="border border-lightgray rounded-md block w-full p-1" value="<%= phone.number %>">
+                                <div class="phone-entry">
+                                    <p class="text-[13px]">Telefone principal</p>
+                                    <input required type="tel" name="phones[]" class="border border-lightgray rounded-md block w-full p-1" value="<%= phone.number %>">
                                     <input type="hidden" name="phoneCreatedAt[]" value="<%= phone.created_at %>">
-                                    <button type="button" onclick="removePhone(this)" class="bg-red-500 text-white ml-2 p-1 rounded">Excluir</button>
                                 </div>
                             <% }) %>
                         <% } else { %>
@@ -71,7 +71,7 @@
             const input = document.createElement('div');
             input.className = 'flex items-center email-entry mt-2';
             input.innerHTML = `
-                <input type="email" name="emails[]" class="border border-lightgray rounded-md block w-full p-1" placeholder="Digite um email">
+                <input required type="email" name="emails[]" class="border border-lightgray rounded-md block w-full p-1" placeholder="Digite um email">
                 <input type="hidden" name="emailCreatedAt[]" value="">
                 <button type="button" onclick="removeEmail(this)" class="bg-red-500 text-white ml-2 p-1 rounded">Excluir</button>
             `;
@@ -80,7 +80,7 @@
 
         function removeEmail(button) {
             const emailContainer = button.parentElement;
-            emailContainer.style.display = 'none';
+            emailContainer.remove();
         }
 
         function addTelefone() {
@@ -88,7 +88,7 @@
             const input = document.createElement('div');
             input.className = 'flex items-center phone-entry mt-2';
             input.innerHTML = `
-                <input type="tel" name="phones[]" class="border border-lightgray rounded-md block w-full p-1" placeholder="Digite um telefone">
+                <input required type="tel" name="phones[]" class="border border-lightgray rounded-md block w-full p-1" placeholder="Digite um telefone">
                 <input type="hidden" name="phoneCreatedAt[]" value="">
                 <button type="button" onclick="removePhone(this)" class="bg-red-500 text-white ml-2 p-1 rounded">Excluir</button>
             `;
@@ -97,7 +97,7 @@
 
         function removePhone(button) {
             const phoneContainer = button.parentElement;
-            phoneContainer.style.display = 'none';
+            phoneContainer.remove();
         }
 
         document.getElementById('updateForm').addEventListener('submit', function(event) {

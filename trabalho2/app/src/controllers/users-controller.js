@@ -8,12 +8,15 @@ import { User } from "../models/user-model.js";
 function listaUsers(req, res) {
     const userDao = new UserDao();
 
-    const pagina  = req.query.pagina;
+    let pagina  = req.query.pagina;
 
     const name = req.query.name;
 
-    if(!pagina)
+    if(!pagina) {
         res.redirect("/users?pagina=1")
+        return;
+    }
+
 
     let usersRaw, totalUsers;
     
@@ -48,8 +51,6 @@ function listaUsers(req, res) {
         }
     });
     
-    console.log({ usersWithEmails });
-
     const data = {
         title: "WEB II",
         users: usersWithEmails,
@@ -118,7 +119,11 @@ function addUser(req, res) {
             }
         } catch (error) {
             // por exemplo, o cpf já existe 
-            res.status(400).send(error.message);
+            if(error.message = "UNIQUE constraint failed: users.cpf") {
+                res.status(400).send("CPF já cadastrado.");
+            } else {
+                res.status(400).send(error.message);
+            }
         }
         res.redirect("/users?pagina=1");
     } catch (error) {

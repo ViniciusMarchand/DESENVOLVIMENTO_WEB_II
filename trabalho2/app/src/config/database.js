@@ -17,7 +17,7 @@ db.exec(`
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         password TEXT NOT NULL,
-        cpf VARCHAR(11) NOT NULL,
+        cpf VARCHAR(11) UNIQUE,
         role TEXT NOT NULL,
         avatar_url TEXT,
         created_at TEXT 
