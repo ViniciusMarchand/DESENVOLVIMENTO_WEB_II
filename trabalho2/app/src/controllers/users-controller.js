@@ -198,14 +198,16 @@ async function updateUser(req, res) {
         // Atualiza os emails
         if (Array.isArray(dados['emails[]'])) {
             dados['emails[]'].forEach((email, index) => {
+            if (email) {
                 emailDao.save({
-                    email,
-                    user_id: id,
-                    createdAt: dados['emailCreatedAt[]'][index]
+                email,
+                user_id: id,
+                createdAt: dados['emailCreatedAt[]'][index]
                 });
+            }
             });
-        } else {
-            emailDao.save({
+        } else if (dados['emails[]']) {
+                emailDao.save({
                 email: dados['emails[]'],
                 user_id: id,
                 createdAt: dados['emailCreatedAt[]']
@@ -218,13 +220,15 @@ async function updateUser(req, res) {
         // Atualiza os telefones
         if (Array.isArray(dados['phones[]'])) {
             dados['phones[]'].forEach((phone, index) => {
-                phoneDao.save({
+            if (phone) {
+                    phoneDao.save({
                     number: phone,
                     user_id: id,
                     createdAt: dados['phoneCreatedAt[]'][index]
                 });
+            }
             });
-        } else {
+        } else if (dados['phones[]']) {
             phoneDao.save({
                 number: dados['phones[]'],
                 user_id: id,
