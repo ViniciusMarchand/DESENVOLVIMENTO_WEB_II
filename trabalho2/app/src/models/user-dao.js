@@ -27,12 +27,18 @@ import { db } from "../config/database.js";
 
 class UserDao {
     list(pagina) {
-        pagina = (pagina - 1) * 10;
-        const stmt = db.prepare('SELECT * FROM "users" order by id LIMIT 10 OFFSET @pagina');
+        pagina = (pagina - 1) * 5;
+        const stmt = db.prepare('SELECT * FROM "users" order by id LIMIT 5 OFFSET @pagina');
         const users = stmt.all({pagina});
         // console.log({ users })
         
         return users;
+    }
+
+    findByName(id) {
+        const stmt = db.prepare('SELECT * FROM "users" WHERE id = @id');
+        const user = stmt.get({id});
+        return user;
     }
 
     totalUsers() {
@@ -63,6 +69,11 @@ class UserDao {
         const { name, password } = userData;
         const stmt = db.prepare('UPDATE users SET name = ?, password = ? WHERE id = ?');
         return stmt.run(name, password, id); 
+    }
+
+    delete(id) {
+        const stmt = db.prepare('DELETE FROM users WHERE id = ?');
+        return stmt.run(id); 
     }
 
     async getEmailsByUserId(userId) {

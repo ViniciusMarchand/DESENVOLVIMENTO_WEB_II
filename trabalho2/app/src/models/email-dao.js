@@ -30,9 +30,6 @@ class EmailDao {
         } catch (error) {
             console.error(error);
         }
-        console.log("AAAAAAAAAAA", { email, user_id, createdAt });
-        const stmt = db.prepare('INSERT INTO emails (email, user_id, created_at) VALUES (@email, @user_id, @createdAt)');
-        stmt.run({email, user_id, createdAt});
     }
 
     findByUserId(userId) {

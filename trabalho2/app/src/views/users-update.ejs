@@ -20,7 +20,7 @@
                     <label for="role">Cargo: </label>
                     <select name="role" class="border border-lightgray rounded-md block w-full p-1" disabled>
                         <option value="admin" <%= data.user.role === 'admin' ? 'selected' : '' %>>Admin</option>
-                        <option value="user" <%= data.user.role === 'user' ? 'selected' : '' %>>User</option>
+                        <option value="cliente" <%= data.user.role === 'cliente' ? 'selected' : '' %>>Cliente</option>
                     </select>
                     <br>
                     <div id="email-area" class="flex flex-col gap-y-3">

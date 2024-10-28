@@ -7,25 +7,46 @@
             <br>
             <div class="bg-white shadow-md rounded my-6">
                 <table class="min-w-full table-auto">
-                    <thead>
+                    <thead class="bg-gray-200 w-full">
                         <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                             <th class="py-3 px-6 text-left whitespace-nowrap">ID</th>
                             <th class="py-3 px-6 text-left">Name</th>
                             <!-- <th class="py-3 px-6 text-left">CPF</th> -->
                             <th class="py-3 px-6 text-left">Email</th>
                             <th class="py-3 px-6 text-left">Phone</th>
-                            <th class="py-3 px-6 text-left">Role</th>
+                            <th class="py-3 px-6 text-left" colspan="2">Role</th>
                         </tr>
                     </thead>
                     <tbody class="text-gray-600 text-sm font-light">
                         <% for (let i = 0; i < data.users.length; i++) { %>
-                            <tr class="border-b border-gray-200 hover:bg-gray-100">
+                            <tr id="user-<%= data.users[i].id %>" class="border-b border-gray-200 hover:bg-gray-100">
                                 <td class="py-3 px-6 text-left whitespace-nowrap"><%= data.users[i].id %></td>
                                 <td class="py-3 px-6 text-left"><%=data.users[i].name%></td>
                                 <!-- <td class="py-3 px-6 text-left"><%=data.users[i].cpf%></td> -->
                                 <td class="py-3 px-6 text-left"><%= data.users[i].emails[0]?.email %></td>
                                 <td class="py-3 px-6 text-left"><%= data.users[i].telefones[0]?.number %></td>
                                 <td class="py-3 px-6 text-left"><%=data.users[i].role%></td>
+                                <td>
+                                    <div class="flex gap-x-1">
+                                        <a href="users/updateUser/<%= data.users[i].id%>" title="edit user">
+                                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15" height="15" viewBox="0 0 24 24">
+                                            <path d="M 19.171875 2 C 18.448125 2 17.724375 2.275625 17.171875 2.828125 L 16 4 L 20 8 L 21.171875 6.828125 C 22.275875 5.724125 22.275875 3.933125 21.171875 2.828125 C 20.619375 2.275625 19.895625 2 19.171875 2 z M 14.5 5.5 L 3 17 L 3 21 L 7 21 L 18.5 9.5 L 14.5 5.5 z"></path>
+                                            </svg>
+                                        </a>
+                                        <%if(data.users[i].role !== "admin") {%>
+                                        <button title="delete user" onclick="deleteUser('<%=data.users[i].id %>')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15" height="15" viewBox="0 0 30 30">
+                                                <path d="M 14.984375 2.4863281 A 1.0001 1.0001 0 0 0 14 3.5 L 14 4 L 8.5 4 A 1.0001 1.0001 0 0 0 7.4863281 5 L 6 5 A 1.0001 1.0001 0 1 0 6 7 L 24 7 A 1.0001 1.0001 0 1 0 24 5 L 22.513672 5 A 1.0001 1.0001 0 0 0 21.5 4 L 16 4 L 16 3.5 A 1.0001 1.0001 0 0 0 14.984375 2.4863281 z M 6 9 L 7.7929688 24.234375 C 7.9109687 25.241375 8.7633438 26 9.7773438 26 L 20.222656 26 C 21.236656 26 22.088031 25.241375 22.207031 24.234375 L 24 9 L 6 9 z"></path>
+                                            </svg>
+                                        </button>
+                                        <%}%>
+                                        <a href="users/<%= data.users[i].id%>">
+                                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15" height="15" viewBox="0 0 50 50">
+                                                <path d="M 25 2 C 12.309295 2 2 12.309295 2 25 C 2 37.690705 12.309295 48 25 48 C 37.690705 48 48 37.690705 48 25 C 48 12.309295 37.690705 2 25 2 z M 25 4 C 36.609824 4 46 13.390176 46 25 C 46 36.609824 36.609824 46 25 46 C 13.390176 46 4 36.609824 4 25 C 4 13.390176 13.390176 4 25 4 z M 24 13 L 24 24 L 13 24 L 13 26 L 24 26 L 24 37 L 26 37 L 26 26 L 37 26 L 37 24 L 26 24 L 26 13 L 24 13 z"></path>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </td>
                             </tr>
                         <% } %>
                     </tbody>
@@ -43,4 +64,21 @@
                 </nav>
             </div>
         </div>
+        <script>
+            function deleteUser(id) {
+                fetch(`/users/deleteUser/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    removeUser(id);
+                });
+            }
+
+            function removeUser(id) {
+                const user = document.getElementById(`user-${id}`);
+                user.remove();
+            }
+        </script>
     </body>

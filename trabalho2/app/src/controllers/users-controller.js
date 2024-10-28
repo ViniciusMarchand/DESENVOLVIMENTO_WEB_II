@@ -8,13 +8,13 @@ import { User } from "../models/user-model.js";
 function listaUsers(req, res) {
     const userDao = new UserDao();
 
-    const { pagina } = req.query;
+    const pagina  = req.query.pagina || 1;
 
     const usersRaw = userDao.list(pagina || 1);  
 
     const totalUsers = userDao.totalUsers();
 
-    const totalPages = Math.ceil(totalUsers / 10);
+    const totalPages = Math.ceil(totalUsers / 5);
 
     console.log("totalUsers", totalUsers);
 
@@ -32,7 +32,6 @@ function listaUsers(req, res) {
         const emails = emailsRaw.map(e => new Email(e.id, e.email, e.user_id, e.created_at));
         const telefones = telefonesRaw.map(t => new Phone(t.id, t.number, t.user_id));
 
-        console.log(telefones)
         return {
             ...u,
             emails: emails,
@@ -118,15 +117,6 @@ function addUser(req, res) {
     }
 }
 
-function detalhaUser(req, res) {
-    const { id } = req.params;
-    // consulta o banco
-    // vai carregar o dados
-    // vai mandar para a tua view
-    res.send("DETALHES DO USUARIO ID " + id);
-}
-
-
 async function paginaUpdateUser(req, res) {
     const { id } = req.params;
     const userDao = new UserDao();
@@ -151,6 +141,32 @@ async function paginaUpdateUser(req, res) {
     }
 }
 
+async function paginaDetailsUser(req, res) {
+    const { id } = req.params;
+
+    try {
+        const userDao = new UserDao();
+        const emails = await userDao.getEmailsByUserId(id);
+        const phones = await userDao.getPhonesByUserId(id);
+    
+        const user = await userDao.getById(id);
+    
+        const data = {
+            title: "WEB II - Detalhes do Usuário",
+            user,
+            emails,
+            phones
+        };
+
+        console.log(data.phones)
+    
+        res.render('users-details', { data });
+        
+    } catch (error) {
+        res.status(500).send("Erro ao carregar os dados do usuário.: " + error.message);
+    }
+}
+
 
 async function updateUser(req, res) {
     const { id } = req.params;
@@ -160,7 +176,6 @@ async function updateUser(req, res) {
     
     const dados = req.body;
 
-    console.log({ dados });
 
     try {
         userDao.update(id, {
@@ -214,6 +229,29 @@ async function updateUser(req, res) {
     }
 }
 
+async function deleteUser(req, res) {
+    const { id } = req.params;
+    const userDao = new UserDao();
+    const emailDao = new EmailDao();
+    const phoneDao = new PhoneDao();
+
+    try {
+        const user = userDao.findByUserId(id);
+        if (user.role === 'ADMIN') {
+            res.status(400).send("Não é possível deletar um usuário administrador.");
+            return;
+        }
+
+        emailDao.delete(id);
+        phoneDao.delete(id);
+        userDao.delete(id);
+
+        res.redirect("/users");
+    } catch (error) {
+        res.status(500).send("Erro ao deletar usuário: " + error);
+    }
+}
+
 
 export {
     addUser,        // O cpf tem que  ser unico + o perfil (ADMIN/CLIENTE) já é setado na etapa inicial
@@ -228,7 +266,9 @@ export {
 
     // INDIVIDUAL ou DUPLA E VCS TEM DUAS SEMANAS =)
 
-    detalhaUser,
+    // detalhaUser,
     paginaUpdateUser,
-    updateUser
+    updateUser,
+    deleteUser,
+    paginaDetailsUser
 };
