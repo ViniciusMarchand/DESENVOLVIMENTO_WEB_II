@@ -1,0 +1,62 @@
+<%- include('includes/head') %>
+
+<body>
+    <%- include('includes/nav') %>
+
+    <h1>Tela Inicial</h1>
+    <% if (user) { %>
+        <p>Olá, <%= user.email %></p>
+        
+        <p>Usuários:</p>
+        <table style="width: 1000px;">
+            <thead style="border: 1px solid;">
+                <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Foto de perfil</th>
+                    <th>Permissões específicas</th>
+                </tr>
+            </thead>
+            <tbody >
+        <%for(let i = 0; i < users.length; i++) {%>
+            <tr style="border: 1px solid;">
+                    <td style="text-align: center;"><%= users[i].name %></td>
+                    <td style="text-align: center;"><%= users[i].email %></td>
+                    <td style="text-align: center;"><%= users[i].role %></td>
+                    <td style="text-align: center;">
+                    <%if(users[i]?.profilePhoto?.url) {%>
+                        <img src="/<%= users[i].profilePhoto.url%>" alt="" width="100px">
+                    <%} else {%>
+                        <p>Usuário sem foto de perfil</p>
+                    <%}%>
+                    </td>
+                    <td style="text-align: center;">
+                        <%if(users[i].permissions.length === 0) {%>
+                            <p style="font-weight: bold;">Usuário sem permissões específicas</p>
+                        <%} else {%>
+                            <ul>
+                                <%for(let j = 0; j < users[i].permissions.length; j++) {%>
+                                    <li style="font-weight: bold;"><%= users[i].permissions[j].module.name %> 
+                                    <%if(users[i].permissions[j].permission) {%>
+                                        tem acesso
+                                    <%} else {%>
+                                        sem acesso
+                                    <%}%>
+                                    </li>
+                                <%}%>
+                            </ul>
+                        <%}%>
+                        <%}%>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a href="/logout">Sair</a>
+    <% } else { %>
+        <a href="/login">Login</a>
+        <a href="/register">Registrar</a>
+    <% } %>
+</body>
+</html>

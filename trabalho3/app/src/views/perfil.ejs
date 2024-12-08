@@ -1,0 +1,14 @@
+<h1>PERFIL</h1>
+<p>Nome: <%= user.name %></p>
+<p>Email: <%= user.email %></p>
+<p>Role: <%= user.role %></p>
+<form action="mudar-foto-perfil" method="post" enctype="multipart/form-data">
+    <input type="file" name="foto" id="fotoId">
+    <button type="submit">Mudar foto de perfil</button>
+</form>
+<p>Foto de perfil</p>
+<%if(user?.profilePhoto?.url){%>
+    <img src="/<%= user.profilePhoto.url %>" alt="" width="300px">
+<%} else {%>
+    <p>Usuário sem foto de perfil</p>
+<%}%>

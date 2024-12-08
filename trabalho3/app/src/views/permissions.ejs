@@ -1,0 +1,49 @@
+<h1>PERMISSÕES</h1>
+
+<table>
+    <thead>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Módulo Financeiro</th>
+        <th>Módulo Relatórios</th>
+        <th>Módulo Produtos</th>
+        <th>...</th>
+    </thead> 
+    <tbody>
+        <%for(let i = 0; i < users.length; i++) {%>
+            <tr>
+                <td><%= users[i].name%></td>            
+                <td><%= users[i].email%></td>            
+                <td>
+                    <input type="checkbox" name="financeiro<%= users[i].id%>" <%if(users[i].financeiro) {%>checked<%}%>>
+                </td>            
+                <td>
+                    <input type="checkbox" name="relatorios<%= users[i].id%>" <%if(users[i].relatorios) {%>checked<%}%>>
+                </td>
+                <td>
+                    <input type="checkbox" name="produtos<%= users[i].id%>" <%if(users[i].produtos) {%>checked<%}%>>
+                </td>
+                <td>
+                    <input type="button" value="Atualizar" onclick="atualizarPermissoes('<%= users[i].id %>')">
+                </td>
+            </tr>
+        <%}%>
+    </tbody>
+</table>
+
+<script>
+    function atualizarPermissoes(userId) {
+        fetch('atualizar-permissoes/' + userId, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                financeiro: document.querySelector(`input[name="financeiro${userId}"]`).checked,
+                relatorios: document.querySelector(`input[name="relatorios${userId}"]`).checked,
+                produtos: document.querySelector(`input[name="produtos${userId}"]`).checked,
+                userId: userId
+            })
+        })
+    }
+</script>

@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../dados.db"
+}
+
+model User {
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  name        String?
+  role        String        @default("USER")
+  password    String
+  profilePhoto ProfilePhoto?
+  permissions Permission[]  @relation("UserPermission") 
+  routesHistory routeHistory[]
+}
+
+model ProfilePhoto {
+  id      Int      @id @default(autoincrement())
+  url     String
+  userId  Int @unique
+  user    User     @relation(fields: [userId], references: [id])
+}
+
+model Module {
+  id          Int         @id @default(autoincrement())
+  name        String       @unique
+  permissions Permission[]
+}
+
+model Permission {
+  name     String  
+  permission Boolean @default(false)
+  moduleId Int
+  module   Module   @relation(fields: [moduleId], references: [id])
+  userId   Int
+  user     User     @relation("UserPermission", fields: [userId], references: [id])
+  @@id([moduleId, userId])
+  @@unique([moduleId, userId])
+
+}
+
+model routeHistory {
+  id          Int      @id @default(autoincrement())
+  route       String
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+}
