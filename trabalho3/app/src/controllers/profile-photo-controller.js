@@ -5,7 +5,6 @@ const prisma = new PrismaClient({
 })
 
 async function mudarFotoPerfil (req, res)  {
-    console.log("req.file", req.session.user);
 
     const user = await prisma.user.findUnique({
         where: {

@@ -1,48 +1,41 @@
 import { Router } from 'express';
 import { isAuth } from '../middlewares/is-auth.js';
 import { profilePage } from '../controllers/profile-controller.js';
-import { userManagement } from '../controllers/gestao-usuario.js';
 import isAdminSuperuser from '../middlewares/is-admin-superuser.js';
-import { register, registerPage } from '../controllers/auth-controller.js';
-import { home } from '../controllers/home-controller.js';
 import mudarFotoPerfil from '../controllers/profile-photo-controller.js';
 import multer from 'multer';
 import { atualizarPermissoes, permissions } from '../controllers/permissions-controller.js';
-import { financeiro } from '../controllers/financeiro-controller.js';
-import hasAccessFinanceiro from '../middlewares/has-access-financeiro.js';
-import { relatorios } from '../controllers/relatorios-controller.js';
-import { produtos } from '../controllers/produtos-controller.js';
-import hasAccessRelatorios from '../middlewares/has-access-relatorios.js';
-import hasAccessProdutos from '../middlewares/has-access-produtos.js';
-
-
-
-const upload = multer({ dest: 'uploads/' })
+import authRouter from './auth-route.js';
+import userManagementRouter from './gestao-usuarios-route.js';
+import financeiroRouter from './financeiro-route.js';
+import produtosRouter from './produtos-route.js';
+import relatoriosRouter from './relatorios-route.js';
+import homeRouter from './home-route.js';
+import profileRouter from './perfil-route.js';
+import permissoesRouter from './permissoes-route.js';
+import profilePhotoRouter from './foto-perfil.js';
+import forbiddenRouter from './forbidden-route.js';
 
 const router = Router();
 
-// router.use("/", pageRoutes);
+router.use("/", homeRouter);
+router.use("/", profileRouter);
 
-router.get('/home', home)
+router.use("/", userManagementRouter)
+router.use("/", authRouter)
 
-router.get('/perfil', isAuth, profilePage);
 
-router.get("/error-forbidden",(req, res) => {
-    res.render('error-forbidden');
-});
+router.use("/", profilePhotoRouter);
 
-router.get('/gestao-usuarios', isAdminSuperuser, userManagement);
+router.use("/", permissoesRouter)
 
-router.get('/register',isAdminSuperuser , registerPage);
-router.post('/register',isAdminSuperuser ,register);
+router.use("/", financeiroRouter);
+router.use("/", relatoriosRouter);
+router.use("/",produtosRouter) 
 
-router.post("/mudar-foto-perfil", isAuth, upload.single('foto'), mudarFotoPerfil);
+router.use("/", forbiddenRouter);
 
-router.get("/permissoes",isAdminSuperuser , permissions);
-router.post("/atualizar-permissoes/:id",isAdminSuperuser , atualizarPermissoes);
 
-router.get("/financeiro", hasAccessFinanceiro, financeiro);
-router.get("/relatorios", hasAccessRelatorios, relatorios);
-router.get("/produtos", hasAccessProdutos, produtos);
+
 
 export default router;

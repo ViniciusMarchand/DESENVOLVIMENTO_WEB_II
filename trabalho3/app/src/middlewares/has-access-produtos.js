@@ -7,7 +7,7 @@ const prisma = new PrismaClient({
 
 const hasAccessProdutos = async (req, res, next) => {
     if (req.session.user === undefined) {
-        return res.redirect('/error-forbidden'); 
+        return res.redirect('/error-forbidden-produtos'); 
     }
 
 if (req.session.user?.role === "ADMIN" || req.session.user?.role === "SUPERUSER") {
@@ -23,7 +23,7 @@ if (req.session.user?.role === "ADMIN" || req.session.user?.role === "SUPERUSER"
     });
 
     if (!permission || !permission.permission) { 
-        return res.redirect('/error-forbidden');
+        return res.redirect('/error-forbidden-produtos');
     }
 
     next();

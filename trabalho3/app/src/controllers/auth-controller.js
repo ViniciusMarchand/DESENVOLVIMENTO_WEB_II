@@ -29,7 +29,51 @@ async function register(req, res) {
     res.redirect('/login');
 };
 
+
+function logout(req, res) {
+    req.session.destroy();
+    res.redirect('/');
+}
+
+function loginPage(req, res) {
+    res.render('login');
+}
+
+async function login(req, res) {
+    const { email, password } = req.body;
+    console.log({ email, password });
+
+    // retorna 1 objeto ou null
+    const user = await prisma.user.findUnique({
+        where: {
+            email: email,
+        },
+    });
+
+    if (!user) {
+        // return res.status(400).json({ error: 'invalid credentials' });
+        return res.status(404).json({ error: 'User not found' });
+    }
+
+    const isValid = bcrypt.compareSync("CHAVE"+ password, user.password);
+    if (!isValid) {
+        return res.status(400).json({ error: 'invalid credentials' });
+    }
+    
+    const userSession = {
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+    };
+    req.session.user = userSession
+    // res.json({ user });
+    res.redirect('/home');
+}
+
 export {
     registerPage,
-    register
+    register,
+    logout,
+    loginPage,
+    login
 };

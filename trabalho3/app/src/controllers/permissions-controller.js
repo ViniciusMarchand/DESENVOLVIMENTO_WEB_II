@@ -24,9 +24,9 @@ async function permissions(req, res) {
     const usuariosFormatados = users.map(user => {
         return {
             ...user,
-            financeiro: user.permissions.find(permission => permission.moduleId === 1).permission,
-            relatorios: user.permissions.find(permission => permission.moduleId === 2).permission,
-            produtos: user.permissions.find(permission => permission.moduleId === 3).permission
+            financeiro: user.permissions.find(permission => permission.moduleId === 1)?.permission || false,
+            relatorios: user.permissions.find(permission => permission.moduleId === 2)?.permission || false,
+            produtos: user.permissions.find(permission => permission.moduleId === 3)?.permission || false
         };
     });
 
@@ -50,6 +50,7 @@ async function atualizarPermissoes(req, res) {
         create: {
             name: 'ACCESS',
             moduleId: 1,
+            permission: financeiro,
             userId
         }
     });
@@ -68,6 +69,7 @@ async function atualizarPermissoes(req, res) {
         create: {
             name: 'ACCESS',
             moduleId: 2,
+            permission: relatorios,
             userId
         }
     });
@@ -85,6 +87,7 @@ async function atualizarPermissoes(req, res) {
         create: {
             name: 'ACCESS',
             moduleId: 3,
+            permission: produtos,
             userId
         }
     });

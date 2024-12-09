@@ -37,14 +37,8 @@ import express, { query } from 'express';
 import session  from 'express-session';
 
 import bcrypt from 'bcrypt';
-import { isAuth } from './middlewares/is-auth.js';
-import { isAdmin } from './middlewares/is-admin.js';
-
-import multer from 'multer';
 
 import router from './routes/index.js';
-const upload = multer({ dest: 'uploads/' })
-
 
 const app = express();
 
@@ -140,59 +134,5 @@ app.get('/', (req, res) => res.redirect('/home'));
 
 app.use("/", router);
 
-app.get('/logout', (req, res) => {
-    req.session.destroy();
-    res.redirect('/');
-}); 
-
-// ROTA PARA BUSCAR A PAGINA DE LOGIN
-app.get('/login', (req, res) => {
-    res.render('login');
-});
-
-/*
-    req.body => corpo da requisicao
-    req.params => parametros da requisicao (ex: /users/:id vinculado a URL)
-    req.query => query params (ex: /users?name=vinicius)
-*/
-// ROTA PARA A AÇÃO DE LOGIN
-app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-    console.log({ email, password });
-
-    // retorna 1 objeto ou null
-    const user = await prisma.user.findUnique({
-        where: {
-            email: email,
-        },
-    });
-
-    if (!user) {
-        // return res.status(400).json({ error: 'invalid credentials' });
-        return res.status(404).json({ error: 'User not found' });
-    }
-
-    const isValid = bcrypt.compareSync("CHAVE"+ password, user.password);
-    if (!isValid) {
-        return res.status(400).json({ error: 'invalid credentials' });
-    }
- 
-    const userSession = {
-        userId: user.id,
-        email: user.email,
-        role: user.role,
-    };
-    req.session.user = userSession
-    // res.json({ user });
-    res.redirect('/home');
-});
-
-// importar as rotas de usuario e adicionar ao meu app
-// import usersRouter from './routes/users-routes.js';
-// app.use('/users', usersRouter);
-
-
-// opcao 1 = criar uma rota que entrega um arquivo estatico
-// opcao 2 = tornar toda pasta de uploads estatica
 
 app.listen(3000, () => console.log("Server iniciou na porta 3000"));
