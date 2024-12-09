@@ -130,7 +130,7 @@ app.get('/healthcheck', (req, res) => {
     res.send('OK');
 });
 
-app.get('/', (req, res) => res.redirect('/home'));
+app.get('/', (req, res) => res.redirect('/login'));
 
 app.use("/", router);
 
