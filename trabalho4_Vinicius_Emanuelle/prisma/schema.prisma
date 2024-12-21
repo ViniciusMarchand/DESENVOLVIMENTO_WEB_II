@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../dados.db"
+}
+
+model User {
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  name        String?
+  password    String
+  valid       Boolean      @default(false)
+  categories  Category[]
+  sharedCategories SharedCategory[]
+}
+
+model Category {
+  id          Int          @id @default(autoincrement())
+  name        String
+  todos       Todo[]
+  sharedWith  SharedCategory[]
+  userId      Int 
+  user        User         @relation(fields: [userId], references: [id])
+}
+
+model SharedCategory {
+  categoryId  Int
+  category    Category     @relation(fields: [categoryId], references: [id])
+  userId      Int
+  user        User         @relation(fields: [userId], references: [id])
+  @@id([categoryId, userId])
+}
+
+model Todo {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String?
+  created     DateTime     @default(now())
+  expectedCompletionDate   DateTime?
+  done        Boolean      @default(false)
+  categoryId  Int
+  category    Category     @relation(fields: [categoryId], references: [id])
+}

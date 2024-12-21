@@ -1,0 +1,339 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Trabalho 4 api",
+    "version": "1.0.0",
+    "description": "Documentação Swagger da API"
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Endpoints de autenticação."
+    },
+    {
+      "name": "category",
+      "description": "Endpoints de categorias."
+    },
+    {
+      "name": "todo",
+      "description": "Endpoints das tarefas."
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Registra um novo usuário.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sucesso."
+          },
+          "400": {
+            "description": "Erro de validação."
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Realiza o login de um usuário.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso."
+          },
+          "400": {
+            "description": "Erro de validação."
+          }
+        }
+      }
+    },
+    "/category": {
+      "get": {
+        "tags": [
+          "category"
+        ],
+        "summary": "Retorna uma lista de categorias.",
+        "responses": {
+          "200": {
+            "description": "Sucesso."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "category"
+        ],
+        "summary": "Cria uma nova categoria.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "userId": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sucesso."
+          },
+          "400": {
+            "description": "Erro de validação."
+          }
+        }
+      }
+    },
+    "/todo": {
+      "get": {
+        "tags": [
+          "todo"
+        ],
+        "summary": "Retorna uma lista de tarefas.",
+        "responses": {
+          "200": {
+            "description": "Sucesso."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "todo"
+        ],
+        "summary": "Cria uma nova tarefa.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "expectedCompletionDate": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "categoryId": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "description",
+                  "categoryId",
+                  "expectedCompletionDate",
+                  "title"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sucesso."
+          },
+          "400": {
+            "description": "Erro de validação."
+          }
+        }
+      }
+    },
+    "/category/{page}": {
+      "get": {
+        "tags": [
+          "category"
+        ],
+        "summary": "Retorna uma lista de categorias paginada.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso."
+          }
+        }
+      }
+    },
+    "/todo/not-done": {
+      "get": {
+        "tags": [
+          "todo"
+        ],
+        "summary": "Retorna uma lista de tarefas não concluídas.",
+        "responses": {
+          "200": {
+            "description": "Sucesso."
+          }
+        }
+      }
+    },
+    "/todo/late": {
+      "get": {
+        "tags": [
+          "todo"
+        ],
+        "summary": "Retorna uma lista de tarefas atrasadas.",
+        "responses": {
+          "200": {
+            "description": "Sucesso."
+          }
+        }
+      }
+    },
+    "/todo/{id}/done": {
+      "put": {
+        "tags": [
+          "todo"
+        ],
+        "summary": "Marca uma tarefa como concluída.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso."
+          }
+        }
+      }
+    },
+    "/category/share/{categoryId}/{userId}": {
+      "get": {
+        "tags": [
+          "category"
+        ],
+        "summary": "Compartilha uma categoria com um usuário.",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso."
+          }
+        }
+      }
+    },
+    "/category/shared": {
+      "get": {
+        "tags": [
+          "category"
+        ],
+        "summary": "Retorna uma lista de categorias compartilhadas.",
+        "responses": {
+          "200": {
+            "description": "Sucesso."
+          }
+        }
+      }
+    }
+  }
+}
